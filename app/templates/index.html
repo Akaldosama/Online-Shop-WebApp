@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Shop</title>
+        <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@200;500&display=swap');
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body{
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 200;
+            color: var(--tg-theme-text-color);
+            background: var(--tg-theme-bg-color);
+        }
+        #main{
+            width: 100%;
+            padding: 20px;
+            text-align: center;
+        }
+        #form {
+            display: none; /* Ensuring the form is hidden initially */
+            width: 100%;
+            max-width: 400px; /* Limit maximum width */
+            margin: 20px auto; /* Center the form */
+            padding: 20px;
+            background-color: var(--tg-theme-bg-color);
+            border-radius: 10px; /* Rounded corners */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+        }
+
+        #form input {
+            width: 100%; /* Full width inputs */
+            padding: 10px; /* Spacing inside the input */
+            margin-bottom: 15px; /* Space between inputs */
+            border: 1px solid var(--tg-theme-border-color);
+            border-radius: 5px; /* Rounded corners for inputs */
+            font-size: 16px; /* Larger font size */
+        }
+
+        #form input:focus {
+            outline: none; /* Remove default outline */
+            border-color: var(--tg-theme-button-color); /* Change border color on focus */
+        }
+
+        #form #error {
+            color: red; /* Error message color */
+            margin-bottom: 10px; /* Space below the error message */
+        }
+
+        #order {
+            background-color: var(--tg-theme-button-color); /* Button background */
+            color: white; /* Button text color */
+        }
+
+        #order:hover {
+            background-color: var(--tg-theme-secondary-bg-color); /* Darken on hover */
+        }
+
+        h1{
+            margin-top: 50px;
+            margin-bottom: 10px;
+        }
+        img{
+            width: 70px;
+            margin: 30px auto;
+        }
+        p{
+            width: 350px;
+            margin: 0 auto;
+        }
+        button{
+            border: 0;
+            border-radius: 5px;
+            margin-top: 50px;
+            height: 60px;
+            width: 200px;
+            font-size: 20px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 500ms ease;
+            color: var(--tg-theme-button-color);
+            background: var(--tg-theme-button-text-color);
+        }
+
+        button:hover{
+            background: var(--tg-theme-secondary-bg-color)
+        }
+
+    </style>
+</head>
+<body>
+<div id="main">
+    <h1>Online Shop</h1>
+    <img src="https://cdn-icons-png.flaticon.com/512/3595/3595455.png" alt="Shop Icon">
+    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusatium ipsum magni, molestias...</p>
+    <button id="buy">Buy</button>
+</div>
+<form id="form">
+    <input type="text" placeholder="Name" id="user_name" required>
+    <input type="email" placeholder="Email" id="user_email" required>
+    <input type="tel" placeholder="Phone" id="user_phone" required>
+    <div id="error"></div>
+    <button type="submit" id="order">Order</button>
+</form>
+
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script>
+    const tg = window.Telegram.WebApp;
+    const buyButton = document.getElementById("buy");
+    const orderForm = document.getElementById("form");
+    const main = document.getElementById("main");
+
+    buyButton.addEventListener("click", () => {
+        orderForm.style.display = "block"; // Show the form
+        main.style.display = "none";
+        tg.expand(); // Expand the Telegram Web App
+    });
+
+    orderForm.addEventListener("submit", function (event) {
+        event.preventDefault(); // Prevent default form submission
+
+        const userName = document.getElementById("user_name").value;
+        const userEmail = document.getElementById("user_email").value;
+        const userPhone = document.getElementById("user_phone").value;
+
+        // Format the message
+        const message = `New Order:\n\nName: ${userName}\nEmail: ${userEmail}\nPhone: ${userPhone}`;
+
+        // Use the Telegram Bot API to send the message
+        const botToken = '7249082193:AAFfFknA-8lumYkCs98nlmJrTLe0pFHArno'; // Replace with your bot token
+
+        const chatId = '1368941825'; // Replace with your chat ID
+        const telegramUrl = `https://api.telegram.org/bot${botToken}/sendMessage`;
+
+        fetch(telegramUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                chat_id: chatId,
+                text: message,
+                parse_mode: "Markdown"
+            }),
+        })
+        .then(response => {
+            if (response.ok) {
+                // Optionally, handle success (reset form, show success message, etc.)
+                alert('Order sent successfully!');
+                orderForm.reset(); // Reset the form fields
+                orderForm.style.display = 'none'; // Hide the form again
+            } else {
+                alert('Error sending order. Please try again.');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error sending order. Please try again.');
+        });
+    });
+</script>
+</body>
+</html>
