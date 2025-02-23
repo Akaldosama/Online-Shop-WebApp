@@ -87,6 +87,7 @@ import asyncio
 import aiohttp
 from aiogram import Bot, Dispatcher, types
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
+from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 from aiogram.utils import executor
 # from telegram import WebAppInfo
 from aiogram.types.web_app_info import WebAppInfo
@@ -96,6 +97,7 @@ API_TOKEN = '7525079654:AAFLaYwTC2niT3r7w3wDmFwvVc4kemWb7D0'
 API_URL = 'https://71e7-213-206-61-98.ngrok-free.app'
 API_URL_REGISTER = f'{API_URL}/api/users/'
 API_URL_ORDER = "http://127.0.0.1:8000/api/orders/create-order/"
+API_URL_LOCATION = "http://127.0.0.1:8000/api/orders/update-location/"
 
 bot = Bot(token=API_TOKEN)
 storage = MemoryStorage()
@@ -211,22 +213,21 @@ async def order_food(message: types.Message):
 
 @dp.message_handler(content_types=types.ContentType.LOCATION)
 async def get_location(message: types.Message):
-    """Handles user location after placing an order"""
     telegram_id = message.from_user.id
     latitude = message.location.latitude
     longitude = message.location.longitude
 
+    # ✅ Send location data to your Django API
     user_location = {
         "telegram_id": telegram_id,
         "latitude": latitude,
         "longitude": longitude
     }
 
-    # Send location data to backend API
     async with aiohttp.ClientSession() as session:
-        async with session.post(API_URL_ORDER, json=user_location) as response:
+        async with session.post(API_URL_LOCATION, json=user_location) as response:
             if response.status == 200:
-                await message.answer("🚀 Thank you! Your order is on the way. 🍽️")
+                await message.answer("🚀 Thank you! Your order is being processed. 🍽️")
             else:
                 await message.answer("⚠️ Something went wrong. Please try again.")
 

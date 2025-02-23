@@ -1,6 +1,8 @@
 import json
 
+from django.http import JsonResponse
 from django.shortcuts import render
+from django.views.decorators.csrf import csrf_exempt
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.decorators import action
@@ -100,3 +102,32 @@ class ItemViewSet(viewsets.ModelViewSet):
 def order_list_view(request):
     items = Item.objects.all().order_by('-created_at')
     return render(request, 'index.html', {'items': items})
+
+@csrf_exempt
+def update_location(request):
+    if request.method == "POST":
+        try:
+            data = json.loads(request.body)
+            telegram_id = data.get("telegram_id")
+            latitude = data.get("latitude")
+            longitude = data.get("longitude")
+
+            # ✅ Find user by Telegram ID
+            user = User.objects.filter(telegram_id=telegram_id).first()
+            if not user:
+                return JsonResponse({"error": "User not found"}, status=404)
+
+            # ✅ Find the latest order for this user
+            order = Order.objects.filter(user=user).order_by("-created_at").first()
+            if not order:
+                return JsonResponse({"error": "No active orders"}, status=404)
+
+            # ✅ Save location in order
+            order.latitude = latitude
+            order.longitude = longitude
+            order.save()
+
+            return JsonResponse({"message": "Location updated successfully!"}, status=200)
+
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=400)

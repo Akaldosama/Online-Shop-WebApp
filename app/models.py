@@ -50,6 +50,8 @@ class Order(models.Model):
         ("on_the_way", "On the way"),
         ("delivered", "Delivered")
     ], default="pending")
+    latitude = models.FloatField(null=True, blank=True)  # ✅ Store Latitude
+    longitude = models.FloatField(null=True, blank=True)  # ✅ Store Longitude
     created_at = models.DateTimeField(auto_now_add=True)
 
     def save(self, *args, **kwargs):
