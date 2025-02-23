@@ -93,7 +93,7 @@ from aiogram.types.web_app_info import WebAppInfo
 
 
 API_TOKEN = '7525079654:AAFLaYwTC2niT3r7w3wDmFwvVc4kemWb7D0'
-API_URL = 'http://127.0.0.1:8000'
+API_URL = 'https://online-shop-webapp.netlify.app'
 API_URL_REGISTER = f'{API_URL}/api/users/'
 
 bot = Bot(token=API_TOKEN)
@@ -106,7 +106,7 @@ def order_func():
     markup = types.InlineKeyboardMarkup()
     markup.add(
         types.InlineKeyboardButton(
-            'Order Food', web_app=WebAppInfo(url='https://online-shop-webapp.netlify.app/items')
+            'Order Food', web_app=WebAppInfo(url='https://online-shop-webapp.netlify.app/items/')
         )
     )
     return markup  # RETURN the markup
