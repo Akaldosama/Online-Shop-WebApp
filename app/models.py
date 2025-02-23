@@ -1,9 +1,13 @@
+import random
+import string
+
 from django.db import models
 
 class User(models.Model):
     telegram_id = models.BigIntegerField(unique=True)
     name = models.CharField(max_length=255)
     phone = models.CharField(max_length=20)
+    is_registered = models.BooleanField(default=False)
     # address = models.TextField()
 
     def __str__(self):
@@ -48,7 +52,20 @@ class Order(models.Model):
     ], default="pending")
     created_at = models.DateTimeField(auto_now_add=True)
 
-    def __str__(self):
-        return f"Order {self.order_number} - {self.user.user}"
+    def save(self, *args, **kwargs):
+        if not self.order_number:
+            self.order_number = ''.join(random.choices(string.ascii_uppercase + string.digits, k=10))
+        super().save(*args, **kwargs)
 
+    def __str__(self):
+        return f"Order {self.order_number} - {self.user.name}"
+
+
+class OrderItem(models.Model):
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name="order_items")
+    item = models.ForeignKey(Item, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField(default=1)
+
+    def __str__(self):
+        return f"{self.quantity} x {self.item.title} (Order {self.order.order_number})"
 

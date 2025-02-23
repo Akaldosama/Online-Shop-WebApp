@@ -32,6 +32,10 @@ JAZZMIN_UI_TWEAKS = {
     "dark_mode_theme": "darkly",
 }
 
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '.ngrok-free.app']
+CSRF_TRUSTED_ORIGINS = ['https://71e7-213-206-61-98.ngrok-free.app']
+# CSRF_TRUSTED_ORIGINS = ['https://online-shop-webapp.netlify.app']
+
 
 # Application definition
 
