@@ -96,10 +96,15 @@
 </head>
 <body>
 <div id="main">
-    <h1>Online Shop</h1>
-    <img src="https://cdn-icons-png.flaticon.com/512/3595/3595455.png" alt="Shop Icon">
-    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusatium ipsum magni, molestias...</p>
-    <button id="buy">Buy</button>
+<!--    <h1>Online Shop</h1>-->
+<!--    <img src="https://cdn-icons-png.flaticon.com/512/3595/3595455.png" alt="Shop Icon">-->
+<!--    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusatium ipsum magni, molestias...</p>-->
+<!--    <button id="buy">Buy</button>-->
+    {% for i in items %}
+        <img src="{{ i.image_url }}" alt="URL">
+        <h3>{{ i.title }}</h3>
+        <p>{{ i.price }}</p>
+    {% endfor %}
 </div>
 <form id="form">
     <input type="text" placeholder="Name" id="user_name" required>
@@ -133,7 +138,7 @@
         const message = `New Order:\n\nName: ${userName}\nEmail: ${userEmail}\nPhone: ${userPhone}`;
 
         // Use the Telegram Bot API to send the message
-        const botToken = '7249082193:AAFfFknA-8lumYkCs98nlmJrTLe0pFHArno'; // Replace with your bot token
+        const botToken = '7525079654:AAFLaYwTC2niT3r7w3wDmFwvVc4kemWb7D0'; // Replace with your bot token
 
         const chatId = '1368941825'; // Replace with your chat ID
         const telegramUrl = `https://api.telegram.org/bot${botToken}/sendMessage`;
